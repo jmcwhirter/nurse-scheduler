@@ -1,15 +1,9 @@
-FROM openjdk:8-jdk-alpine
+FROM jboss/wildfly
 
-RUN apk update \
-&& apk add ca-certificates openssl \
-&& update-ca-certificates
+ENV VERSION 7.4.1.Final
 
-WORKDIR /opt
-
-ENV URL=https://download.jboss.org/optaplanner/release/7.4.1.Final/optaplanner-distribution-7.4.1.Final.zip
-
-RUN wget ${URL} -O optaplanner.zip \
+RUN curl -o optaplanner.zip https://download.jboss.org/optaplanner/release/$VERSION/optaplanner-distribution-$VERSION.zip \
 && unzip optaplanner.zip \
 && rm optaplanner.zip
 
-CMD /opt/optaplanner-distribution-7.4.1.Final/examples/runExamples.sh
+RUN cp optaplanner-distribution-$VERSION/webexamples/binaries/optaplanner-webexamples-*.war /opt/jboss/wildfly/standalone/deployments/optaplanner.war
